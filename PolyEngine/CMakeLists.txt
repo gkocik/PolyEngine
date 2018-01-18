@@ -122,6 +122,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(Clang|^GNU$)")
 	add_compile_options($<$<OR:$<CONFIG:Debug>,$<CONFIG:DebugFast>>:-fno-omit-frame-pointer>)
 	add_compile_options($<$<CONFIG:DebugFast>:-O1>)
 	add_compile_options($<$<OR:$<CONFIG:Testing>,$<CONFIG:Release>>:-O3>)
+	add_compile_options($<$<OR:$<CONFIG:Debug>,$<CONFIG:DebugFast>>:-DDEBUG>)
+	add_compile_options($<$<CONFIG:Testing>:-DTESTING>)
 	add_compile_options($<$<CONFIG:Release>:-DFINAL>) #NOTE(vuko): add_definitions() does not support generator expressions
 	add_compile_options($<$<CONFIG:Release>:-mtune=native>)
 	set(SIMD_FLAGS -msse4.2 -mfpmath=sse) #note(vuko): $<CXX_COMPILER_ID:comp> and cotire do not get along, see cotire issue #124
@@ -129,6 +131,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(Clang|^GNU$)")
 	#TODO(vuko): more build type macro definitions (once we decide on them)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	add_definitions(/DNOMINMAX) #those macros are useless and just keep messing things up, so disable them
+	add_compile_options($<$<OR:$<CONFIG:Debug>,$<CONFIG:DebugFast>>:/DDEBUG>)
+	add_compile_options($<$<CONFIG:Testing>:/DTESTING>)
 	add_compile_options($<$<CONFIG:Release>:/DFINAL>)
 	set(SIMD_FLAGS "") #doesn't seem we need them
 	if(NOT CMAKE_GENERATOR MATCHES "Visual Studio")
